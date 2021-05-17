@@ -1,0 +1,30 @@
+{% load static %}
+{% load thumbnail %}
+<header>
+  <div class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center">
+        <strong>Happydress</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse bg-white" id="navbarHeader">
+        <div class="container">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a href="#" class="nav-link">Взять в аренду</a></li>
+            {% if user.is_staff %}
+              <li class="nav-item"><a href="#" class="nav-link">Платья</a></li>
+            {% endif %}
+          <li class="nav-item">
+            <a href="https://www.instagram.com/happydress_msk/" class="nav-link active text-danger">
+              Наш инстаграм
+            </a>
+
+          </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

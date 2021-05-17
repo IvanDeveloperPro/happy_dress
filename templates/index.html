@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<main>
+    <div class="container mt-5">
+      <h1 class="align-content-center mb-4">Аренда нарядных платьев для фотоссесий и мероприятий </h1>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for dress in dresses %}
+          <div class="col">
+            <div class="card w-75 shadow-sm">
+              {% for image in dress.images.all %}
+                <a href="{% url 'single_dress' dress.id %}">
+                  {% thumbnail image.image "400x400" upscale=True as im %}
+                    <img class=img-fluid src="{{ im.url }}"  alt="Photoplace" />
+                  {% endthumbnail %}
+                <a/>
+               {% endfor %}
+              <div class="card-body">
+                <h4 class="card-title">{{ dress.item}}</h4>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-outline-danger">Забронировать</button>
+                  </div>
+                  <h5 class="card-subtitle text-muted">{{ dress.price|floatformat:'0'|intcomma  }} руб.</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+</main>
+{% endblock %}
