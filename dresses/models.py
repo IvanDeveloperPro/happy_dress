@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.sessions.models import Session
 from django.db import models
 
 
@@ -10,48 +11,6 @@ DELIVERY_CHOICES = [
 ]
 
 
-class DressType(models.Model):
-    item = models.CharField(
-        max_length=200,
-        verbose_name='Тип платья'
-    )
-
-    class Meta:
-        verbose_name = 'Тип платья'
-        verbose_name_plural = 'Тип платьев'
-
-    def __str__(self):
-        return self.item
-
-
-class Color(models.Model):
-    color = models.CharField(
-        max_length=200,
-        verbose_name='Цвет'
-    )
-
-    class Meta:
-        verbose_name = 'Цвет',
-        verbose_name_plural = 'Цвета'
-
-    def __str__(self):
-        return self.color
-
-
-class LeaseType(models.Model):
-    type = models.CharField(
-        max_length=200,
-        verbose_name='Тип использования',
-    )
-
-    class Meta:
-        verbose_name = 'Тип использования',
-        verbose_name_plural = 'Типы использования'
-
-    def __str__(self):
-        return self.type
-
-
 class Dress(models.Model):
     item = models.CharField(
         max_length=200,
@@ -60,34 +19,23 @@ class Dress(models.Model):
     price = models.FloatField(
         verbose_name='Цена'
     )
-    size = models.PositiveIntegerField(
+    size = models.CharField(
+        max_length=30,
         verbose_name='Рост'
     )
     volume = models.PositiveIntegerField(
         verbose_name='Объем груди'
     )
-    type = models.ManyToManyField(
-        DressType,
-        verbose_name='Тип платья',
-        related_name='dresses',
-        blank=True,
-    )
-    color = models.ForeignKey(
-        Color,
-        verbose_name='Цвет',
-        on_delete=models.SET_NULL,
-        related_name='dresses'
-    )
+
     discount = models.PositiveIntegerField(
         verbose_name='Скидка',
         null=True,
         blank=True
     )
-    image = models.ImageField(
-        verbose_name='Фото',
-        upload_to='dresses/media',
-        blank=True,
-        null=True
+    description = models.TextField(
+        verbose_name='Описание',
+        null=True,
+        blank=True
     )
 
     class Meta:
@@ -96,6 +44,30 @@ class Dress(models.Model):
 
     def __str__(self):
         return self.item
+
+
+class ImagesDress(models.Model):
+    image = models.ImageField(
+        verbose_name='Фото',
+        upload_to='dresses/media',
+        blank=True,
+        null=True
+    )
+    dress = models.ForeignKey(
+        Dress,
+        verbose_name='Платье',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='images'
+    )
+
+    class Meta:
+        verbose_name = 'Фотография'
+        verbose_name_plural = 'Фотографии'
+
+    def __str__(self):
+        return f'{self.dress.item} - {str(self.id)}'
 
 
 class Order(models.Model):
@@ -117,13 +89,8 @@ class Order(models.Model):
         auto_now_add=True,
         db_index=True
     )
-    type_lease = models.ForeignKey(
-        LeaseType,
-        verbose_name='Тип использования',
-        on_delete=models.SET_NULL,
-        related_name='orders',
-        null=True,
-        blank=True
+    type_lease = models.CharField(
+        verbose_name='Где будут использовать платье',
     )
     delivery = models.CharField(
         max_length=2,
@@ -147,3 +114,26 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.tenant.name}'
+
+    class Basket(models.Model):
+        user = models.ForeignKey(
+            User,
+            verbose_name='Заказчик',
+            on_delete=models.SET_NULL,
+            null=True,
+            blank=True,
+            related_name='baskets'
+        )
+        session = models.ForeignKey(
+            Session,
+            verbose_name='Сессия',
+            on_delete=models.SET_NULL,
+            null=True,
+            blank=True,
+            related_name='baskets'
+        )
+        dress = models.ManyToManyField(
+            Dress,
+            verbose_name='Платье',
+            related_name='baskets'
+        )
