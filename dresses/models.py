@@ -37,6 +37,24 @@ class Dress(models.Model):
         null=True,
         blank=True
     )
+    image_1 = models.ImageField(
+        verbose_name='Фото_1',
+        upload_to='dresses/media',
+        blank=True,
+        null=True
+    )
+    image_2 = models.ImageField(
+        verbose_name='Фото_2',
+        upload_to='dresses/media',
+        blank=True,
+        null=True
+    )
+    image_3 = models.ImageField(
+        verbose_name='Фото_3',
+        upload_to='dresses/media',
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = 'Платье',
@@ -44,30 +62,6 @@ class Dress(models.Model):
 
     def __str__(self):
         return self.item
-
-
-class ImagesDress(models.Model):
-    image = models.ImageField(
-        verbose_name='Фото',
-        upload_to='dresses/media',
-        blank=True,
-        null=True
-    )
-    dress = models.ForeignKey(
-        Dress,
-        verbose_name='Платье',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='images'
-    )
-
-    class Meta:
-        verbose_name = 'Фотография'
-        verbose_name_plural = 'Фотографии'
-
-    def __str__(self):
-        return f'{self.dress.item} - {str(self.id)}'
 
 
 class Order(models.Model):
@@ -91,6 +85,7 @@ class Order(models.Model):
     )
     type_lease = models.CharField(
         verbose_name='Где будут использовать платье',
+        max_length=50
     )
     delivery = models.CharField(
         max_length=2,
@@ -115,25 +110,26 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.id} - {self.tenant.name}'
 
-    class Basket(models.Model):
-        user = models.ForeignKey(
-            User,
-            verbose_name='Заказчик',
-            on_delete=models.SET_NULL,
-            null=True,
-            blank=True,
-            related_name='baskets'
-        )
-        session = models.ForeignKey(
-            Session,
-            verbose_name='Сессия',
-            on_delete=models.SET_NULL,
-            null=True,
-            blank=True,
-            related_name='baskets'
-        )
-        dress = models.ManyToManyField(
-            Dress,
-            verbose_name='Платье',
-            related_name='baskets'
-        )
+
+class Basket(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name='Заказчик',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='baskets'
+    )
+    session = models.ForeignKey(
+        Session,
+        verbose_name='Сессия',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='baskets'
+    )
+    dress = models.ManyToManyField(
+        Dress,
+        verbose_name='Платье',
+        related_name='baskets'
+    )

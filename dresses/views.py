@@ -1,11 +1,8 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
-from django.forms import modelformset_factory
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import Dress, ImagesDress
+from .models import Dress
 from .forms import DressForm
-
-ImageFormSet = modelformset_factory(ImagesDress, fields=('image',), extra=2)
 
 
 def index(request):
@@ -18,21 +15,40 @@ def single_dress(request, dress_id):
     return render(request, 'dresses/dress_card.html', {'dress': dress})
 
 
-def create_edit_dress(request):
-    dress_form = DressForm(request.POST or None, request.FILES or None)
-    image_formset = ImageFormSet(request.POST or None, request.FILES or None)
-    if dress_form.is_valid() and image_formset.is_valid():
-        dress = dress_form.save(commit=False)
-        images = image_formset.save(commit=False)
-        for image in images:
-            image.dress = dress
-            image.save()
-        dress.save()
+@login_required(login_url='login')
+def create_dress(request):
+    dress_form = DressForm(request.POST or None, files=request.FILES or None)
+    if dress_form.is_valid():
+        dress_form.save()
         return redirect('index')
     return render(
         request,
         'dresses/create_edit_dress.html',
         {
             'dress_form': dress_form,
-            'image_formset': image_formset
         })
+
+
+@login_required(login_url='login')
+def edit_dress(request, id_dress):
+    dress = get_object_or_404(Dress, id=id_dress)
+    dress_form = DressForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=dress
+    )
+    if dress_form.is_valid():
+        dress_form.save()
+        return redirect('index')
+    return render(
+        request,
+        'dresses/create_edit_dress.html',
+        {
+            'dress_form': dress_form,
+        })
+
+
+@login_required(login_url='login')
+def delete_dress(request, id_dress):
+    get_object_or_404(Dress, id=id_dress).delete()
+    return redirect('index')

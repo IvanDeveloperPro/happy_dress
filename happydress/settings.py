@@ -3,7 +3,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.environ.get('DJANGO_KEY')
+SECRET_KEY = 'oe0e%+&u0u%1b1osjusggk(^9i_zp9df-)4_(*xj*x%j9=ymfo'
+# SECRET_KEY = os.environ.get('DJANGO_KEY')
 
 DEBUG = True
 
@@ -12,6 +13,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'dresses',
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,6 +83,10 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+LOGIN_URL = 'auth/login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 

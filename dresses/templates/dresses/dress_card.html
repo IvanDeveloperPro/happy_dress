@@ -7,19 +7,15 @@
   <div class="card mt-4">
     <div class="row g-5">
       <div class="col-md-4">
-        {% for dress in dress.images.all %}
-          {% thumbnail dress.image "500x500" upscale=True as im %}
+          {% thumbnail dress.image_1 "500x500" upscale=True as im %}
             <img class=img-fluid src="{{ im.url }}"  alt="Photoplace" />
           {% endthumbnail %}
-        {% endfor %}
       </div>
     <div class="col">
       <div class="card-body">
         <h3 class="card-title">{{ dress.item }}</h3>
         <p class="card-text">Рост: {{ dress.size }} см.</p>
         <p class="card-text">Объем груди: {{ dress.volume }} см.</p>
-        <p class="card-text">Длина: {{ dress.type }}</p>
-        <p class="card-text">Цвет: {{ dress.color }}</p>
         {% if dress.discount %}
           <p class="card-text">Скидка: {{ dress.discount }} руб.</p>
         {% endif %}
@@ -30,7 +26,7 @@
       <h1 class="card-text mt-5 mb-5 text-danger">{{ dress.price|floatformat:'0'|intcomma }} руб.</h1>
         <button type="button" class="btn btn-outline-danger mr-5">Арендовать</button>
         {% if user.is_staff %}
-          <button type="button" class="btn btn-outline-primary ml-3">Редактировать</button>
+          <a href="{% url 'edit_dress' dress.id %}" class="btn btn-outline-primary ml-3">Редактировать</a>
         {% endif %}
     </div>
   </div>

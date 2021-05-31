@@ -12,16 +12,25 @@
       <div class="collapse navbar-collapse bg-white" id="navbarHeader">
         <div class="container">
           <ul class="navbar-nav">
-            <li class="nav-item"><a href="#" class="nav-link">Взять в аренду</a></li>
+            <li class="nav-item"><a href="#" class="nav-link active">Взять в аренду</a></li>
             {% if user.is_staff %}
               <li class="nav-item"><a href="#" class="nav-link">Платья</a></li>
+              <li class="nav-item"><a href="{% url 'create_dress' %}" class="nav-link">Добавить платье</a></li>
             {% endif %}
           <li class="nav-item">
             <a href="https://www.instagram.com/happydress_msk/" class="nav-link active text-danger">
               Наш инстаграм
             </a>
-
           </li>
+          </ul>
+          <ul class="navbar-nav justify-content-end">
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a href="{% url 'password_change' %}" class="nav-link">Изменить пароль</a></li>
+            <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Выход</a></li>
+          {% else %}
+            <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Войти</a></li>
+            <li class="nav-item"><a href="{% url 'signup' %}" class="btn btn-primary">Создать аккаунт</a></li>
+          {% endif %}
           </ul>
         </div>
       </div>
