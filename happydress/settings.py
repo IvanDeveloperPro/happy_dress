@@ -3,8 +3,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'oe0e%+&u0u%1b1osjusggk(^9i_zp9df-)4_(*xj*x%j9=ymfo'
-# SECRET_KEY = os.environ.get('DJANGO_KEY')
+SECRET_KEY = os.environ.get('DJANGO_KEY')
 
 DEBUG = True
 
