@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+   <div class="container">
+     <form method="post">
+       {% csrf_token %}
+       <div class="row">
+         <div class="col l12 m12 s12">
+           <h1 class="flow-text center">Выбранные платья для аренды</h1>
+         </div>
+       {% if basket.dress.all %}
+
+       <div class="row">
+         <div class="col l6 s12 m6">
+           <div class="input-field">
+             <i class="material-icons prefix">event</i>
+             <input id="{{ form.rent_date.id_for_label }}" type="text" name="{{ form.rent_date.name }}" value="{{ form.rent_date.value|default_if_none:''}}" class="datepicker">
+             <label for="{{ form.rent_date.id_for_label }}">Дата бронирования</label>
+             {% if form.rent_date.errors %}
+               {% for error in form.rent_date.errors %}
+                 <p class="red-text">{{ error }}</p>
+               {% endfor %}
+             {% endif %}
+           </div>
+         </div>
+       </div>
+       {% endif %}
+       <div class="row">
+       {% if basket.dress.all %}
+       {% for dress in basket.dress.all %}
+         <div class="col l6 s12 m6">
+           <div class="card horizontal">
+             <div class="card-image">
+               <a href="{% url 'single_dress' dress.id %}">
+               {% thumbnail dress.image_1 "200x200" upscale=True as im %}
+                 <img src="{{ im.url }}" alt="Photoplace" />
+               {% endthumbnail %}
+               </a>
+             </div>
+             <div class="card-stacked">
+               <div class="card-content">
+                 <div class="row">
+                   <div class="col l6">
+                     <a href="{% url 'single_dress' dress.id %}">
+                       <span class="card-title">{{ dress.item }}</span>
+                     </a>
+                   </div>
+                   <div class="col l6">
+                     <h5 class="green-text">{{ dress.price }} руб.</h5>
+                   </div>
+                 </div>
+                 <div class="card-action">
+                   <a class="btn-floating halfway-fab waves-effect waves-light red" href="{% url 'del_basket' dress.id %}"><i class="material-icons">remove</i></a>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       {% endfor %}
+       {% endif %}
+       </div>
+       <div class="row">
+         <div class="col  offset-l10">
+           {% if user.is_authenticated %}
+             <a class="btn green"><input type="submit"><i class="material-icons">send</i>Арендовать</a>
+           {% else %}
+             <a class="waves-effect waves-light btn red modal-trigger" href="#modal1"><i class="material-icons">send</i>Арендовать</a>
+           {% endif %}
+         </div>
+      </div>
+     </form>
+   </div>
+
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Просьба указать Ваше имя и телефон, чтобы связаться с вами</h4>
+      <form>
+        <div class="container">
+          <div class="input-field col l3 m6 s12">
+            <i class="material-icons prefix">account_circle</i>
+            <input id="icon_prefix" type="text" class="validate">
+            <label for="icon_prefix">Имя</label>
+          </div>
+          <div class="input-field col l3 m6 s12">
+            <i class="material-icons prefix">phone</i>
+            <input id="icon_telephone" type="tel" class="validate">
+            <label for="icon_telephone">Телефон</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="{% url 'basket' %}" class="modal-close waves-effect waves-green btn-green"><i class="material-icons">send</i>Отправить</a>
+    </div>
+
+  </div>
+{% endblock %}
+

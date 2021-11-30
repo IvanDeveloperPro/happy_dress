@@ -1,36 +1,37 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
 {% load humanize %}
+{% load dress_filter %}
 {% block content %}
 <div class="container">
-<div class="row">
-  <div class="card mt-4">
-    <div class="row g-5">
-      <div class="col-md-4">
-          {% thumbnail dress.image_1 "500x500" upscale=True as im %}
-            <img class=img-fluid src="{{ im.url }}"  alt="Photoplace" />
-          {% endthumbnail %}
-      </div>
-    <div class="col">
-      <div class="card-body">
-        <h3 class="card-title">{{ dress.item }}</h3>
-        <p class="card-text">Рост: {{ dress.size }} см.</p>
-        <p class="card-text">Объем груди: {{ dress.volume }} см.</p>
+  <div class="card horizontal">
+    <div class="card-image">
+    {% thumbnail dress.image_1 "500x500" upscale=True as im %}
+      <img src="{{ im.url }}"  alt="Photoplace" />
+    {% endthumbnail %}
+    </div>
+    <div class="card-stacked">
+      <div class="card-content">
+        <h3>{{ dress.item }}</h3>
+        <p>Рост: {{ dress.size }} см.</p>
+        <p>Объем груди: {{ dress.volume }} см.</p>
         {% if dress.discount %}
-          <p class="card-text">Скидка: {{ dress.discount }} руб.</p>
+          <p>Скидка: {{ dress.discount }} руб.</p>
         {% endif %}
-        <p class="card-text">Описание: {{ dress.description }}</p>
+        <p>Описание: {{ dress.description }}</p>
+        <h1 class="pink-text">{{ dress.price|floatformat:'0'|intcomma }} руб.</h1>
+      </div>
+      <div class="card-action">
+        {% if request|dress_in_basket:dress %}
+        <a href="{% url 'del_basket' dress.id %}" class="btn cyan"><i class="material-icons left">remove</i>Убрать из брони </a>
+        {% else %}
+        <a href="{% url 'add_basket' dress.id %}" class="btn cyan"><i class="material-icons left">add</i>Добавить в бронь </a>
+        {% endif %}
+        {% if user.is_staff %}
+          <a href="{% url 'edit_dress' dress.id %}" class="btn cyan"><i class="material-icons left">edit</i>Редактировать</a>
+        {% endif %}
       </div>
     </div>
-    <div class="col">
-      <h1 class="card-text mt-5 mb-5 text-danger">{{ dress.price|floatformat:'0'|intcomma }} руб.</h1>
-        <button type="button" class="btn btn-outline-danger mr-5">Арендовать</button>
-        {% if user.is_staff %}
-          <a href="{% url 'edit_dress' dress.id %}" class="btn btn-outline-primary ml-3">Редактировать</a>
-        {% endif %}
-    </div>
   </div>
-  </div>
-</div>
 </div>
 {% endblock %}

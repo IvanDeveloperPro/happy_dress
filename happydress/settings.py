@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,7 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'sorl.thumbnail',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+    'sorl.thumbnail'
 ]
 
 MIDDLEWARE = [
@@ -33,6 +36,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'happydress.middleware.ConvertDateMiddleware'
 ]
 
 ROOT_URLCONF = 'happydress.urls'
@@ -44,6 +49,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'dresses.context_proccessors.count',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -88,6 +94,8 @@ CACHES = {
 LOGIN_URL = 'auth/login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+SITE_ID = 1
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 

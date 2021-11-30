@@ -1,7 +1,23 @@
-<footer class=" mt-5 text-muted shadow-lg position-bottom">
+<footer class="page-footer">
   <div class="container">
-    <div class="col">
-      <a href="#" class="nav-link"><p class="text-muted">Контакты </p></a>
+    <div class="row">
+      <div class="col l6 s12">
+        <a href="{% url 'contacts' %}">
+          <h5 class="white-text">Контакты</h5>
+        </a>
+        <a href="https://www.instagram.com/happydress_msk/">
+          <p class="grey-text text-lighten-4">Наш Инстаграмм</p>
+        </a>
+        <a href="{% url 'delivery' %}">
+          <p class="grey-text text-lighten-4">Доставка и Самовывоз</p>
+        </a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2021 Права на весь контент страницы защищён
     </div>
   </div>
 </footer>

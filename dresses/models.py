@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 from django.db import models
 
-
 User = get_user_model()
 
 DELIVERY_CHOICES = [
@@ -16,7 +15,7 @@ class Dress(models.Model):
         max_length=200,
         verbose_name='Название'
     )
-    price = models.FloatField(
+    price = models.PositiveIntegerField(
         verbose_name='Цена'
     )
     size = models.CharField(
@@ -83,15 +82,15 @@ class Order(models.Model):
         auto_now_add=True,
         db_index=True
     )
+    rent_date = models.DateTimeField(
+        verbose_name='Дата брони',
+        db_index=True
+    )
     type_lease = models.CharField(
         verbose_name='Где будут использовать платье',
-        max_length=50
-    )
-    delivery = models.CharField(
-        max_length=2,
-        verbose_name='Вид доставки',
-        choices=DELIVERY_CHOICES,
-
+        max_length=50,
+        blank=True,
+        null=True
     )
     address = models.CharField(
         max_length=500,
@@ -99,7 +98,7 @@ class Order(models.Model):
         null=True,
         blank=True,
     )
-    cost = models.FloatField(
+    cost = models.PositiveIntegerField(
         verbose_name='Стоимость заказа'
     )
 
@@ -108,7 +107,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return f'{self.id} - {self.tenant.name}'
+        return f'{self.id} - {self.tenant.username}'
 
 
 class Basket(models.Model):
@@ -133,3 +132,12 @@ class Basket(models.Model):
         verbose_name='Платье',
         related_name='baskets'
     )
+    rent_date = models.DateField(
+        verbose_name='Дата аренды',
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзины'
